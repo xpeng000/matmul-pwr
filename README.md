@@ -1,1 +1,1 @@
-# maxmul-pwr
+# matmul-pwr
