@@ -18,7 +18,7 @@ nvidia-smi --query-gpu=timestamp,power.draw --format=csv,noheader,nounits --id=$
 script_event "start recording GPU power"
 sleep $buffer_time
 script_event "start train"
-#run code here > $file_path 2>&1
+./a.out > $file_path 2>&1
 script_event "end train"
 sleep $buffer_time
 script_event "recording stops"
