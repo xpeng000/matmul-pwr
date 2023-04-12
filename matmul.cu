@@ -43,7 +43,7 @@ void verify_result(vector<int> &a, vector<int> &b, vector<int> &c, int N) {
 
 int main() {
   // Matrix size of 1024 x 1024;
-  int N = 1 << 10;
+  int N = 1 << 11;
 
   // Size (in bytes) of matrix
   size_t bytes = N * N * sizeof(int);
