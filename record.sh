@@ -5,8 +5,8 @@ script_event() {
         echo $(date "+%F-%T.%3N-%Z")
 }
 
-id=$1
-timestep=$2
+id=0
+timestep=50
 buffer_time=3
 
 nvcc matmul.cu -o mm
