@@ -9,8 +9,6 @@ using std::cout;
 using std::generate;
 using std::vector;
 
-#define SHMEM_SIZE 256
-
 __global__ void plain(const int *a, const int *b, int *c, int N) {
   // initialize elements of matrix c to 0
    for (int i = 0; i < N; i++) {
@@ -39,28 +37,6 @@ __global__ void matrixMul(const int *a, const int *b, int *c, int N) {
     // Accumulate results for a single element
     c[row * N + col] += a[row * N + k] * b[k * N + col];
   }
-}
-
-// Matrix Multiplication kernel
-// Optimizations:
-//  Accumulate partial results in a temporary variable
-//  Ensure all threads in warps access consecutive memory
-__global__ void coalesced(int *a, int *b, int *c, int N){
-    // Calculate the row and column for each thread
-    int row = blockIdx.y * blockDim.y + threadIdx.y; 
-    int col = blockIdx.x * blockDim.x + threadIdx.x;
-
-    // Boundary check
-    if((row < N) && (col < N)){
-        // Each thread computes one element
-        int tmp = 0;
-        for(int i = 0; i < N; i++){
-            tmp += a[row * N + i] * b[i * N + col];
-        }
-
-        // Write back the tmp result
-        c[row * N + col] = tmp;
-    }
 }
 
 // Check result on the CPU
@@ -121,8 +97,7 @@ int main() {
 
   // Launch kernel
   //plain<<<1, 1>>>(d_a, d_b, d_c, N);
-  //matrixMul<<<blocks, threads>>>(d_a, d_b, d_c, N);
-  coalesced<<<blocks, threads>>>(d_a, d_b, d_c, N);
+  matrixMul<<<blocks, threads>>>(d_a, d_b, d_c, N);
   cudaDeviceSynchronize();
 
   // Copy back to the host
